@@ -108,7 +108,7 @@ fn write_dword(name: &str, value: u32) -> Result<(), String> {
     unsafe {
         // Notify Windows without waiting indefinitely on an unresponsive shell.
         SendMessageTimeoutW(
-            (-1isize) as *mut c_void,
+            0xffffusize as *mut c_void,
             0x001A,
             0,
             wide.as_ptr() as isize,
