@@ -1,12 +1,12 @@
 [package]
-name = "zuzifypro"
-version = "1.0.0"
-description = "ZuzifyPro desktop interface demo"
-authors = ["ZuzifyPro"]
+name = "widsetv2"
+version = "2.0.0"
+description = "WidSetV2 — native Windows settings control center"
+authors = ["Zuzify"]
 edition = "2021"
 
 [lib]
-name = "zuzifypro_lib"
+name = "widsetv2_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -14,3 +14,5 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+winreg = "0.52"

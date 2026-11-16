@@ -1,40 +1,37 @@
-# ZuzifyPro
+# WidSetV2
 
-**Native Windows desktop application** with a screenshot-inspired compact, dark interface. Built with **Tauri 2, Rust, and the Windows WebView2 engine** — **no Electron** and no remote web server.
+Native Windows settings control center by Zuzify. Built with **Rust + Tauri 2 + Windows WebView2**. **No Electron**, no cloud account, no telemetry, and no arbitrary shell execution.
 
-The application starts at 660 × 441 and supports resizing. Features include an expandable sidebar, Targets/Response/Limits pages, switches, sliders, selects, key-binding capture, multiple appearance presets, reset, minimize and close. UI preferences are persisted locally in the WebView storage. Every game-themed setting is an inert interface demonstration; the app does **not** connect to games, external processes, or the internet.
+![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-879dff)
+![UI](https://img.shields.io/badge/runtime-Tauri%202-879dff)
 
-## Install / run
+## What works
 
-1. In this repository, choose **Actions → Build ZuzifyPro Windows**.
-2. Open the successful workflow run; under **Artifacts**, choose `ZuzifyPro-Installer-Windows-x64` for the `.exe` installer, or `ZuzifyPro-Portable-Windows-x64` for the portable executable.
-3. The installer is unsigned; Windows SmartScreen might display an unverified-publisher warning.
+WidSetV2 reads the computer's Windows version, build, uptime, device name, installed memory, current theme, mouse speed, keyboard repeat, and installed power plans. It can **actually change** current-user app dark theme, system dark theme, transparency effects, mouse pointer speed (1–20), keyboard repeat speed (0–31), and active power scheme. Preferences are applied using Windows registry or Win32 APIs; the application does not ask for blanket administrator access. Your device's policy may restrict certain settings.
 
-**Requirements:** Windows 10/11 64-bit with WebView2 runtime (built into current Windows 11).
+It also provides category navigation, quick actions, search, keyboard shortcuts, and links into dozens of real Windows Settings pages via Microsoft's documented \`ms-settings:\` URI scheme. These links **open Windows Settings** rather than pretending WidSetV2 can independently change every protected system option. Pages that need special hardware or Windows editions may not be available.
 
-## Build locally
+When \`web/index.html\` is opened in a normal browser, the preview is clearly labeled **Demo mode** and changes are simulated locally. Windows settings are only touched by the installed native application.
 
-Install stable Rust with the MSVC toolchain, Microsoft C++ Build Tools, WebView2, and Tauri CLI 2. Then:
+## Download a Windows app
 
-```powershell
+Go to **Actions → Build WidSetV2 Windows → latest successful run → Artifacts** and download either **WidSetV2-Portable-x64** or **WidSetV2-Setup-x64**. GitHub Actions artifacts are packaged by GitHub and require a signed-in account to download. The EXE is currently unsigned and may show a Windows SmartScreen warning.
+
+## Local development
+
+Requirements: Windows 10 or 11, Rust stable MSVC toolchain, Visual Studio C++ Build Tools, WebView2 runtime, and Tauri CLI 2.
+
+\`\`\`powershell
 cargo install tauri-cli --version '^2' --locked
 cd src-tauri
+cargo tauri dev
 cargo tauri build
-```
+\`\`\`
 
-The built executable is at `src-tauri/target/release/zuzifypro.exe`, and the NSIS installer is in `src-tauri/target/release/bundle/nsis/`.
+Tauri bundles the \`web/\` directory directly without a Node dependency or web server.
 
-## Preview
+## Safety
 
-Open `web/index.html` in a browser for a live UI preview. For the closest comparison, use a 660 × 441 viewport.
+Native commands only expose a fixed allowlist of changes. Settings-page launch is restricted to plain \`ms-settings:\` page names. Power plan IDs must match installed power plans before being applied; command execution is argument-based rather than through a shell. No registry-cleanup, security-service disabling, admin bypass, or untrusted command execution features exist. Use Windows Settings directly for administrator-protected or hardware-specific controls.
 
-## Project structure
-
-- `web/index.html`, `web/styles.css`, `web/app.js`: complete frontend; no frontend dependencies
-- `web/assets/`: background/brand assets
-- `src-tauri/`: native Rust application, window settings, capabilities, icons
-- `.github/workflows/windows-installer.yml`: Windows CI build and downloadable executables
-
-## Security and scope
-
-The frontend is bundled and runs offline. No telemetry, account system, driver, DLL injection, game integration, or process manipulation is implemented. The local settings are UI preferences only. No Electron runtime is used.
+The executable retains the project repository name \`Zuzify-Pro\` for continuity, but the application and installer are branded **WidSetV2**.
